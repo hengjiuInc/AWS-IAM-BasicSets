@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Import test
+
+Parameters:
+  AwsAccountId:
+    Type: String
+    AllowedPattern: "[0-9]*"
+    Description: Enter the allowed AccountID.
+
+Resources:
+  AdminRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: "switch-Admin"
+      Description: "Provides full access to AWS resources."
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action: "sts:AssumeRole"
+            Principal:
+              AWS: !Sub arn:aws:iam::${AwsAccountId}:root
+            Condition:
+              Bool:
+                aws:MultiFactorAuthPresent: "true"
+              StringEquals:
+                aws:PrincipalTag/Group: "Admin"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+
+  PowerRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: "switch-Power"
+      Description: "Provides full access to AWS resources, but does not allow management of Users and groups."
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action: "sts:AssumeRole"
+            Principal:
+              AWS: !Sub arn:aws:iam::${AwsAccountId}:root
+            Condition:
+              Bool:
+                aws:MultiFactorAuthPresent: "true"
+              StringEquals:
+                aws:PrincipalTag/Group: "Power"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/PowerUserAccess
+
+  ReadRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: "switch-Read"
+      Description: "Provides read-only access to AWS resources."
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action: "sts:AssumeRole"
+            Principal:
+              AWS: !Sub arn:aws:iam::${AwsAccountId}:root
+            Condition:
+              Bool:
+                aws:MultiFactorAuthPresent: "true"
+              StringEquals:
+                aws:PrincipalTag/Group: "Read"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/ReadOnlyAccess
+
+
