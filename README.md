@@ -5,3 +5,12 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/hengjiuInc/AWS-Lambda-CustomNotification)
 
 # AWS-IAM-BasicSets
+
+## Role一覧
+
+|Name        |Policy             |
+|------------|-------------------|
+|switch-Admin|AdministratorAccess|
+|switch-Power|PowerUserAccess    |
+|switch-Read |ReadOnlyAccess     |
+
